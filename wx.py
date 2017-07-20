@@ -2,13 +2,16 @@ from flask import Flask
 import hashlib
 from flask import request
 from flask import make_response
+import time
+import urllib2
+import xml.etree.ElementTree as ET
+import json
+import random
+import re
+import urllib
 
 app = Flask(__name__)
 
-
-# @app.route('/')
-# def hello_world():
-#     return 'Hello World!'
 
 @app.route('/', methods=['GET', 'POST'])
 def wechat_auth():
@@ -32,7 +35,16 @@ def wechat_auth():
         else:
             return 'failed'
     else:
-        return 'post failed'
+        rec = request.stream.read()
+        xml_rec = ET.fromstring(rec)
+        tou = xml_rec.find('ToUserName').text
+        fromu = xml_rec.find('FromUserName').text
+        msgType = xml_rec.find("MsgType").text
+        content = xml_rec.find('Content').text
+        xml_rep = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content><FuncFlag>0</FuncFlag></xml>"
+        response = make_response(xml_rep % (fromu, tou, str(int(time.time())), 'test'))
+        response.content_type = 'application/xml'
+        return response
 
 
 if __name__ == '__main__':
