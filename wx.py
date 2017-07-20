@@ -35,7 +35,11 @@ def wechat_auth():
         else:
             return 'failed'
     else:
+        f = open('/text111.txt', 'w')
+        f.write('Hello, world!')
         rec = request.stream.read()
+        f.write(rec)
+        f.close()
         xml_rec = ET.fromstring(rec)
         tou = xml_rec.find('ToUserName').text
         fromu = xml_rec.find('FromUserName').text
