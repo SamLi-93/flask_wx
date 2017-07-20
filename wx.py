@@ -8,6 +8,11 @@ import xml.etree.ElementTree as ET
 app = Flask(__name__)
 
 
+@app.route('/hello', methods=['GET', 'POST'])
+def hello():
+    return "hello"
+
+
 @app.route('/', methods=['GET', 'POST'])
 def wechat_auth():
     if request.method == 'GET':
