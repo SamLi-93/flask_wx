@@ -30,16 +30,29 @@ def wechat_auth():
         else:
             return 'failed'
     else:
-        rec = request.stream.read()
-        xml_rec = ET.fromstring(rec)
-        tou = xml_rec.find('ToUserName').text
-        fromu = xml_rec.find('FromUserName').text
-        msgType = xml_rec.find("MsgType").text
-        content = xml_rec.find('Content').text
-        xml_rep = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content><FuncFlag>0</FuncFlag></xml>"
-        response = make_response(xml_rep % (fromu, tou, str(int(time.time())), "text", "test123"))
-        response.content_type = 'application/xml'
-        return response
+        xml_str = request.stream.read()
+        xml = ET.fromstring(xml_str)
+        toUserName = xml.find('ToUserName').text
+        fromUserName = xml.find('FromUserName').text
+        createTime = xml.find('CreateTime').text
+        msgType = xml.find('MsgType').text
+        if msgType == 'text':
+            reply = '''
+                        <xml>
+                        <ToUserName><![CDATA[%s]]></ToUserName>
+                        <FromUserName><![CDATA[%s]]></FromUserName>
+                        <CreateTime>%s</CreateTime>
+                        <MsgType><![CDATA[%s]]></MsgType>
+                        <Content><![CDATA[%s]]></Content>
+                        </xml>
+                        ''' % (
+                fromUserName,
+                toUserName,
+                createTime,
+                'text',
+                'Unknow Format, Please check out'
+            )
+            return reply
 
 
 if __name__ == '__main__':
