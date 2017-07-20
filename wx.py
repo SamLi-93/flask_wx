@@ -3,12 +3,7 @@ import hashlib
 from flask import request
 from flask import make_response
 import time
-import urllib2
 import xml.etree.ElementTree as ET
-import json
-import random
-import re
-import urllib
 
 app = Flask(__name__)
 
@@ -35,18 +30,14 @@ def wechat_auth():
         else:
             return 'failed'
     else:
-        f = open('/text111.txt', 'w')
-        f.write('Hello, world!')
         rec = request.stream.read()
-        f.write(rec)
-        f.close()
         xml_rec = ET.fromstring(rec)
         tou = xml_rec.find('ToUserName').text
         fromu = xml_rec.find('FromUserName').text
         msgType = xml_rec.find("MsgType").text
         content = xml_rec.find('Content').text
         xml_rep = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content><FuncFlag>0</FuncFlag></xml>"
-        response = make_response(xml_rep % (fromu, tou, str(int(time.time())), 'test'))
+        response = make_response(xml_rep % (fromu, tou, str(int(time.time())), "text", "test123"))
         response.content_type = 'application/xml'
         return response
 
