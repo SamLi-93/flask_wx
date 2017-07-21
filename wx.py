@@ -1,3 +1,4 @@
+#coding=utf-8 
 from flask import Flask
 import hashlib
 from flask import request
@@ -41,8 +42,7 @@ def wechat_auth():
         fromUserName = xml.find('FromUserName').text
         createTime = xml.find('CreateTime').text
         msgType = xml.find('MsgType').text
-        if msgType == 'text':
-            reply = '''
+        reply_xml = '''
                         <xml>
                         <ToUserName><![CDATA[%s]]></ToUserName>
                         <FromUserName><![CDATA[%s]]></FromUserName>
@@ -50,14 +50,68 @@ def wechat_auth():
                         <MsgType><![CDATA[%s]]></MsgType>
                         <Content><![CDATA[%s]]></Content>
                         </xml>
-                        ''' % (
-                fromUserName,
-                toUserName,
-                createTime,
-                'text',
-                'Unknow Format, Please check out'
-            )
-            return reply
+                        '''
+        if msgType == 'text':
+            content = xml.find("Content").text
+            if content == 'help':
+                reply = reply_xml % (
+                    fromUserName,
+                    toUserName,
+                    createTime,
+                    'text',
+                    'Unknow Format, Please check out'
+                )
+                return reply
+            elif content == 'Sam':
+                reply = reply_xml % (
+                    fromUserName,
+                    toUserName,
+                    createTime,
+                    'text',
+                    'Sam is fucking hot!'
+                )
+                return reply
+            elif content == u'测试':
+                reply = reply_xml % (
+                    fromUserName,
+                    toUserName,
+                    createTime,
+                    'text',
+                    u'测试一下'
+                )
+                return reply
+            else:
+                reply = reply_xml % (
+                    fromUserName,
+                    toUserName,
+                    createTime,
+                    'text',
+                    'no nothing'
+                )
+                return reply
+
+        if msgType == "event":
+            mscontent = xml.find("Event").text
+            if mscontent == "subscribe":
+                reply_text = 'thx for subscribe'
+                reply = reply_xml % (
+                    fromUserName,
+                    toUserName,
+                    createTime,
+                    'text',
+                    reply_text
+                )
+                return reply
+            if mscontent == "unsubscribe":
+                reply_text = 'bye'
+                reply = reply_xml % (
+                    fromUserName,
+                    toUserName,
+                    createTime,
+                    'text',
+                    reply_text
+                )
+                return reply
 
 
 if __name__ == '__main__':
