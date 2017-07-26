@@ -6,6 +6,8 @@ from flask import make_response
 import time
 import xml.etree.ElementTree as ET
 import re
+import json
+import requests
 
 app = Flask(__name__)
 
@@ -83,7 +85,6 @@ def wechat_auth():
                 )
                 return reply
             elif re_result:
-
                 reply = reply_xml % (
                     fromUserName,
                     toUserName,
@@ -91,6 +92,36 @@ def wechat_auth():
                     'text',
                     u'测试一下'
                 )
+            elif content == u'嘉兴天气':
+                query_url = "http://tj.nineton.cn/Heart/index/all?city=CHZJ020000&language=&unit=&aqi=&alarm=&key="
+                result = requests.get(query_url)
+                result_text = result.text
+                json_text = json.loads(result_text)
+                now_weather = json_text['weather'][0]['now']
+                future_weather = json_text['weather'][0]['future']
+                a = u"今日天气: " + now_weather['text'] + "\n" + u"温度: " + now_weather['temperature'] + "\n" + u"体感温度: " + \
+                    now_weather[
+                        'feels_like'] + "\n" + u"湿度: " + \
+                    now_weather['humidity'] + "\n" + u"pm2.5: " + now_weather['air_quality']['city'][
+                        'pm25'] + "\n" + u"空气质量: " + \
+                    now_weather['air_quality']['city']['quality'] + "\n\n\n"
+
+                for i in future_weather:
+                    date = i['date']
+                    day = i['day']
+                    text = i['text']
+                    high = i['high']
+                    low = i['low']
+                    a = a + date + '\n' + day + ':' + text + '\n' + u"温度" + low + '-' + high + '\n\n'
+                reply = reply_xml % (
+                    fromUserName,
+                    toUserName,
+                    createTime,
+                    'text',
+                    a
+                )
+                return reply
+
             else:
                 reply = reply_xml % (
                     fromUserName,
