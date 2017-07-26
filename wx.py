@@ -91,13 +91,27 @@ def wechat_auth():
                 json_text = json.loads(result_text)
                 now_weather = json_text['weather'][0]['now']
                 future_weather = json_text['weather'][0]['future']
+                reply_str = u"今日天气: " + now_weather['text'] + "\n" + u"温度: " + now_weather['temperature'] + "\n" + u"体感温度: " + \
+                    now_weather[
+                        'feels_like'] + "\n" + u"湿度: " + \
+                    now_weather['humidity'] + "\n" + u"pm2.5: " + now_weather['air_quality']['city'][
+                        'pm25'] + "\n" + u"空气质量: " + \
+                    now_weather['air_quality']['city']['quality'] + "\n\n\n"
+
+                for i in future_weather:
+                    date = i['date']
+                    day = i['day']
+                    text = i['text']
+                    high = i['high']
+                    low = i['low']
+                    reply_str = reply_str + date + '\n' + day + ':' + text + '\n' + u"温度" + low + '-' + high + '\n\n'
 
                 reply = reply_xml % (
                     fromUserName,
                     toUserName,
                     createTime,
                     'text',
-                    u'测试一下'
+                    reply_str
                 )
                 return reply
             elif re_result:
