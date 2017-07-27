@@ -116,7 +116,6 @@ def wechat_auth():
                 )
                 return reply
             elif re_result:
-                reply_text = 'test'
                 express_no = content[2:]
                 express_name_response = "https://www.kuaidi100.com/autonumber/autoComNum?text=" + express_no
                 express_name_result = requests.get(express_name_response)
