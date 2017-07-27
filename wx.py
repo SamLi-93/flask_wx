@@ -56,7 +56,7 @@ def wechat_auth():
                         '''
         if msgType == 'text':
             content = xml.find("Content").text
-            re_result = re.match(u"(快递)(\d)*$", content)
+            re_result = re.match(u"(快递)(\d)*$", content.strip())
             if content == 'help':
                 reply = reply_xml % (
                     fromUserName,
@@ -91,12 +91,13 @@ def wechat_auth():
                 json_text = json.loads(result_text)
                 now_weather = json_text['weather'][0]['now']
                 future_weather = json_text['weather'][0]['future']
-                reply_str = u"今日天气: " + now_weather['text'] + "\n" + u"温度: " + now_weather['temperature'] + "\n" + u"体感温度: " + \
-                    now_weather[
-                        'feels_like'] + "\n" + u"湿度: " + \
-                    now_weather['humidity'] + "\n" + u"pm2.5: " + now_weather['air_quality']['city'][
-                        'pm25'] + "\n" + u"空气质量: " + \
-                    now_weather['air_quality']['city']['quality'] + "\n\n\n"
+                reply_str = u"今日天气: " + now_weather['text'] + "\n" + u"温度: " + now_weather[
+                    'temperature'] + "\n" + u"体感温度: " + \
+                            now_weather[
+                                'feels_like'] + "\n" + u"湿度: " + \
+                            now_weather['humidity'] + "\n" + u"pm2.5: " + now_weather['air_quality']['city'][
+                                'pm25'] + "\n" + u"空气质量: " + \
+                            now_weather['air_quality']['city']['quality'] + "\n\n\n"
 
                 for i in future_weather:
                     date = i['date']
@@ -115,13 +116,13 @@ def wechat_auth():
                 )
                 return reply
             elif re_result:
-                reply_text  = 'test'
-                # express_no = content[2:]
-                # express_name_response = "https://www.kuaidi100.com/autonumber/autoComNum?text=" + express_no
-                # express_name_result = requests.get(express_name_response)
-                # express_name_text = express_name_result.text
-                # json_text = json.loads(express_name_text)
-                # express_name = json_text['auto'][0]['comCode']
+                reply_text = 'test'
+                express_no = content[2:]
+                express_name_response = "https://www.kuaidi100.com/autonumber/autoComNum?text=" + express_no
+                express_name_result = requests.get(express_name_response)
+                express_name_text = express_name_result.text
+                json_text = json.loads(express_name_text)
+                express_name = json_text['auto'][0]['comCode']
                 # query_url = "https://www.kuaidi100.com/query?type=" + express_name + "&postid=" + express_no + "&id=1&valicode=&temp=0.668626891655163"
                 # result = requests.get(query_url)
                 # result_text = result.text
@@ -134,7 +135,7 @@ def wechat_auth():
                     toUserName,
                     createTime,
                     'text',
-                    reply_text
+                    express_name
                 )
                 return reply
             else:
