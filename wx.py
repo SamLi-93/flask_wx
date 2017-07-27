@@ -135,7 +135,7 @@ def wechat_auth():
                     toUserName,
                     createTime,
                     'text',
-                    express_name
+                    json_text
                 )
                 return reply
             else:
