@@ -115,19 +115,20 @@ def wechat_auth():
                 )
                 return reply
             elif re_result:
-                express_no = content[2:]
-                express_name_response = "https://www.kuaidi100.com/autonumber/autoComNum?text=" + express_no
-                express_name_result = requests.get(express_name_response)
-                express_name_text = express_name_result.text
-                json_text = json.loads(express_name_text)
-                express_name = json_text['auto'][0]['comCode']
-                query_url = "https://www.kuaidi100.com/query?type=" + express_name + "&postid=" + express_no + "&id=1&valicode=&temp=0.668626891655163"
-                result = requests.get(query_url)
-                result_text = result.text
-                json_text = json.loads(result_text)
-                reply_text = ''
-                for i in json_text['data'][::-1]:
-                    reply_text += i['time'] + ':' + i['context'] + '\n'
+                reply_text  = 'test'
+                # express_no = content[2:]
+                # express_name_response = "https://www.kuaidi100.com/autonumber/autoComNum?text=" + express_no
+                # express_name_result = requests.get(express_name_response)
+                # express_name_text = express_name_result.text
+                # json_text = json.loads(express_name_text)
+                # express_name = json_text['auto'][0]['comCode']
+                # query_url = "https://www.kuaidi100.com/query?type=" + express_name + "&postid=" + express_no + "&id=1&valicode=&temp=0.668626891655163"
+                # result = requests.get(query_url)
+                # result_text = result.text
+                # json_text = json.loads(result_text)
+                # reply_text = ''
+                # for i in json_text['data'][::-1]:
+                #     reply_text += i['time'] + ':' + i['context'] + '\n'
                 reply = reply_xml % (
                     fromUserName,
                     toUserName,
