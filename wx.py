@@ -123,19 +123,19 @@ def wechat_auth():
                 express_name_text = express_name_result.text
                 json_text = json.loads(express_name_text)
                 express_name = json_text['auto'][0]['comCode']
-                # query_url = "https://www.kuaidi100.com/query?type=" + express_name + "&postid=" + express_no + "&id=1&valicode=&temp=0.668626891655163"
-                # result = requests.get(query_url)
-                # result_text = result.text
-                # json_text = json.loads(result_text)
-                # reply_text = ''
-                # for i in json_text['data'][::-1]:
-                #     reply_text += i['time'] + ':' + i['context'] + '\n'
+                query_url = "https://www.kuaidi100.com/query?type=" + express_name + "&postid=" + express_no + "&id=1&valicode=&temp=0.668626891655163"
+                result = requests.get(query_url)
+                result_text = result.text
+                json_text = json.loads(result_text)
+                reply_text = ''
+                for i in json_text['data'][::-1]:
+                    reply_text += i['time'] + ':' + i['context'] + '\n'
                 reply = reply_xml % (
                     fromUserName,
                     toUserName,
                     createTime,
                     'text',
-                    express_name_result
+                    reply_text
                 )
                 return reply
             else:
